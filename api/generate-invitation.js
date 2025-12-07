@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const formData = req.body;
 
     // Build the prompt for Claude
-    const prompt = `You are a friendly, enthusiastic run club organizer writing an event invitation for ODUCRU.
+const prompt = `You are a friendly, enthusiastic run club organizer writing an event invitation.
 
 Event Details:
 - Title: ${formData.eventTitle}
@@ -33,8 +33,15 @@ Event Details:
 
 Generate TWO versions:
 
-1. SHORT (under 280 characters, include time/location/pace, energetic tone, 1-2 emojis)
-2. LONG (3-5 sentences, include all details, warm and inclusive tone)
+1. SHORT (under 280 characters, include time/location/pace, energetic tone, NO emojis)
+2. LONG (3-5 sentences, include all details, warm and inclusive tone, NO emojis)
+
+Important guidelines:
+- Do NOT mention specific club names
+- Use generic terms like "runners" or "everyone" instead of "fam"
+- Keep it professional and welcoming
+- Avoid excessive or decorative emojis
+- All paces should be genuinely welcome- if otherwise mentioned
 
 Output format:
 SHORT: [your short version]
