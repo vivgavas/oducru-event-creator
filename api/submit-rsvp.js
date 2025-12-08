@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     // Append data to sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:G', // Writes to columns A through G
+      range: 'RSVPs!A:G', // Writes to columns A through G
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [rowData]
