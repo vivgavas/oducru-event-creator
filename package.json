@@ -1,0 +1,8 @@
+{
+  "name": "oducru-event-creator",
+  "version": "1.0.0",
+  "description": "AI-powered event invitation generator with RSVP system",
+  "dependencies": {
+    "googleapis": "^128.0.0"
+  }
+}
