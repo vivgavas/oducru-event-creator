@@ -493,6 +493,20 @@ if (rsvpLink) {
             form.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        function copyRsvpLink() {
+    const rsvpLink = document.querySelector('.rsvp-card .result-text').textContent;
+    navigator.clipboard.writeText(rsvpLink).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
     </script>
 </body>
 </html>
