@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP - Event</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        :root {
+            --primary-red: #D32F2F;
+            --dark-bg: #1A1A1A;
+            --light-bg: #FFFFFF;
+            --text-dark: #2C2C2C;
+            --text-light: #666666;
+            --border-color: #E0E0E0;
+            --success-green: #2E7D32;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 24px 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: var(--primary-red);
+            margin-bottom: 8px;
+        }
+        
+        .event-details {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .event-details p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        
+        .event-details strong {
+            color: var(--text-dark);
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        
+        .required {
+            color: var(--primary-red);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+        
+        .helper-text {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 6px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+        
+        .submit-btn:hover {
+            background: #B71C1C;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .success-message.active {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .success-message h2 {
+            color: var(--success-green);
+            margin-bottom: 12px;
+        }
+        
+        .error-message {
+            display: none;
+            background: #FFEBEE;
+            border: 1px solid #FFCDD2;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            color: #C62828;
+            font-size: 14px;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RSVP for Event</h1>
+        </div>
+        
+        <div class="event-details" id="eventDetails">
+            <p><strong>Event:</strong> <span id="eventTitle">Loading...</span></p>
+            <p><strong>Date:</strong> <span id="eventDate">Loading...</span></p>
+            <p><strong>Time:</strong> <span id="eventTime">Loading...</span></p>
+            <p><strong>Location:</strong> <span id="eventLocation">Loading...</span></p>
+            <p><strong>Pace:</strong> <span id="eventPace">Loading...</span></p>
+        </div>
+        
+        <form id="rsvpForm" class="form-section">
+            <div class="form-group">
+                <label>Your Name <span class="required">*</span></label>
+                <input type="text" id="name" required placeholder="John Doe">
+            </div>
+            
+            <div class="form-group">
+                <label>Email <span class="required">*</span></label>
+                <input type="email" id="email" required placeholder="john@example.com">
+                <div class="helper-text">We'll send you event reminders</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Pace Preference <span class="required">*</span></label>
+                <select id="pace" required>
+                    <option value="">Select your typical pace</option>
+                    <option value="6:00-7:00 min/mile">6:00-7:00 min/mile (Fast)</option>
+                    <option value="7:00-8:00 min/mile">7:00-8:00 min/mile</option>
+                    <option value="8:00-9:00 min/mile">8:00-9:00 min/mile</option>
+                    <option value="9:00-10:00 min/mile">9:00-10:00 min/mile</option>
+                    <option value="10:00-11:00 min/mile">10:00-11:00 min/mile</option>
+                    <option value="11:00-12:00 min/mile">11:00-12:00 min/mile</option>
+                    <option value="12:00+ min/mile">12:00+ min/mile (Easy pace)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Experience Level <span class="required">*</span></label>
+                <select id="experience" required>
+                    <option value="">Select your experience</option>
+                    <option value="Beginner">Beginner (New to running)</option>
+                    <option value="Intermediate">Intermediate (Run regularly)</option>
+                    <option value="Advanced">Advanced (Race/train seriously)</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit RSVP</button>
+        </form>
+        
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h2>You're all set!</h2>
+            <p>We've received your RSVP. See you at the event!</p>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+    
+    <script>
+        // Get event ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('event');
+        
+        // Load event details (for now, from URL params - we'll improve this later)
+        document.getElementById('eventTitle').textContent = urlParams.get('title') || 'Event';
+        document.getElementById('eventDate').textContent = urlParams.get('date') || 'TBD';
+        document.getElementById('eventTime').textContent = urlParams.get('time') || 'TBD';
+        document.getElementById('eventLocation').textContent = urlParams.get('location') || 'TBD';
+        document.getElementById('eventPace').textContent = urlParams.get('pace') || 'TBD';
+        
+        const form = document.getElementById('rsvpForm');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const rsvpData = {
+                eventId: eventId,
+                eventTitle: urlParams.get('title'),
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                pace: document.getElementById('pace').value,
+                experience: document.getElementById('experience').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                const response = await fetch('/api/submit-rsvp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(rsvpData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to submit RSVP');
+                }
+                
+                form.style.display = 'none';
+                successMessage.classList.add('active');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = 'Sorry, something went wrong. Please try again.';
+                errorMessage.classList.add('active');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit RSVP';
+            }
+        });
+    </script>
+</body>
+</html>
