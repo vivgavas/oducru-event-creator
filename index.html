@@ -423,7 +423,7 @@
                 }
                 
                 const content = data.content || '';
-                
+                const rsvpLink = data.rsvpLink || '';
                 const shortMatch = content.match(/SHORT:\s*(.+?)(?=\n\nLONG:|LONG:|$)/s);
                 const longMatch = content.match(/LONG:\s*(.+?)$/s);
                 
