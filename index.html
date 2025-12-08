@@ -434,7 +434,27 @@
                 document.getElementById('longText').textContent = longText;
                 document.getElementById('shortCharCount').textContent = `${shortText.length} / 280`;
                 document.getElementById('longCharCount').textContent = `${longText.length} chars`;
-                
+                // Display RSVP link if available
+if (rsvpLink) {
+    // Remove any existing RSVP card first
+    const existingRsvpCard = document.querySelector('.rsvp-card');
+    if (existingRsvpCard) {
+        existingRsvpCard.remove();
+    }
+    
+    const rsvpSection = document.createElement('div');
+    rsvpSection.className = 'result-card rsvp-card';
+    rsvpSection.innerHTML = `
+        <div class="result-header">
+            <span class="result-label">RSVP Link</span>
+        </div>
+        <div class="result-text" style="word-break: break-all; font-size: 14px;">${rsvpLink}</div>
+        <button class="copy-btn" onclick="copyRsvpLink()">📋 Copy RSVP Link</button>
+    `;
+    
+    const newEventBtn = document.querySelector('.new-event-btn');
+    results.insertBefore(rsvpSection, newEventBtn);
+}
                 loading.classList.remove('active');
                 results.classList.add('active');
                 
