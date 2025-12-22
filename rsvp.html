@@ -223,11 +223,27 @@
             <button type="submit" class="submit-btn">Submit RSVP</button>
         </form>
         
-        <div class="success-message" id="successMessage">
-            <div class="success-icon">✓</div>
-            <h2>You're all set!</h2>
-            <p>We've received your RSVP. See you at the event!</p>
-        </div>
+<div class="success-message" id="successMessage">
+    <div class="success-icon">✓</div>
+    <h2>You're Registered!</h2>
+    
+    <div class="event-summary" id="eventSummary">
+        <h3>Event Details</h3>
+        <p><strong>Event:</strong> <span id="confirmEventTitle"></span></p>
+        <p><strong>Date:</strong> <span id="confirmEventDate"></span></p>
+        <p><strong>Time:</strong> <span id="confirmEventTime"></span></p>
+        <p><strong>Location:</strong> <span id="confirmEventLocation"></span></p>
+        <p><strong>Pace:</strong> <span id="confirmEventPace"></span></p>
+    </div>
+    
+    <button class="submit-btn" onclick="downloadCalendar()" style="margin-top: 20px;">
+        📅 Add to Calendar
+    </button>
+    
+    <p style="margin-top: 16px; font-size: 14px; color: #666;">
+        We'll see you there! The calendar invite will help you remember.
+    </p>
+</div>
         
         <div class="error-message" id="errorMessage"></div>
     </div>
