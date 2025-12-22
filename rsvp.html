@@ -293,7 +293,21 @@
                 if (!response.ok) {
                     throw new Error('Failed to submit RSVP');
                 }
-                
+                // Store event details and populate confirmation
+            currentEventDetails = {
+                title: urlParams.get('title'),
+                date: urlParams.get('date'),
+                time: urlParams.get('time'),
+                location: urlParams.get('location'),
+                pace: urlParams.get('pace')
+            };
+            
+            // Populate confirmation details
+            document.getElementById('confirmEventTitle').textContent = currentEventDetails.title || 'Event';
+            document.getElementById('confirmEventDate').textContent = currentEventDetails.date || 'TBD';
+            document.getElementById('confirmEventTime').textContent = currentEventDetails.time || 'TBD';
+            document.getElementById('confirmEventLocation').textContent = currentEventDetails.location || 'TBD';
+            document.getElementById('confirmEventPace').textContent = currentEventDetails.pace || 'TBD';
                 form.style.display = 'none';
                 successMessage.classList.add('active');
                 
@@ -305,6 +319,54 @@
                 submitBtn.textContent = 'Submit RSVP';
             }
         });
+    // Store event details globally for calendar generation
+let currentEventDetails = null;
+
+// Function to generate and download .ics calendar file
+function downloadCalendar() {
+    if (!currentEventDetails) return;
+    
+    const event = currentEventDetails;
+    
+    // Format date and time for calendar
+    const eventDateTime = new Date(`${event.date}T${event.time}`);
+    const endDateTime = new Date(eventDateTime.getTime() + 90 * 60000); // +90 minutes
+    
+    // Format to iCal format (YYYYMMDDTHHMMSS)
+    function formatDate(date) {
+        return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    }
+    
+    // Create iCal content
+    const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//ODUCRU//Event Creator//EN',
+        'BEGIN:VEVENT',
+        `DTSTART:${formatDate(eventDateTime)}`,
+        `DTEND:${formatDate(endDateTime)}`,
+        `SUMMARY:${event.title}`,
+        `LOCATION:${event.location}`,
+        `DESCRIPTION:Pace: ${event.pace}\\n\\nSee you there!`,
+        'STATUS:CONFIRMED',
+        'BEGIN:VALARM',
+        'TRIGGER:-PT1H',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Run event in 1 hour',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+    ].join('\r\n');
+    
+    // Create download
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `${event.title.replace(/[^a-z0-9]/gi, '_')}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
     </script>
 </body>
 </html>
