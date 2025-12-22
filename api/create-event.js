@@ -115,7 +115,7 @@ LONG: [your long version]`;
 
     // Generate RSVP link
     const baseUrl = 'https://oducru-event-creator.vercel.app';
-    const rsvpLink = `${baseUrl}/rsvp.html?event=${eventId}`;
+    const rsvpLink = `${baseUrl}/rsvp.html?event=${eventId}&title=${encodeURIComponent(eventData.eventTitle)}&date=${eventData.eventDate}&time=${eventData.eventTime}&location=${encodeURIComponent(eventData.location)}&pace=${encodeURIComponent(eventData.paceRange)}`;
 
     // Return everything
     return res.status(200).json({
