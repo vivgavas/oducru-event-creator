@@ -9,6 +9,33 @@ function generateEventId() {
   return `evt_${timestamp}_${random}`;
 }
 
+// Determine pace category and guidance for AI
+function getPaceGuidance(paceRange) {
+  const pace = paceRange.toLowerCase();
+  
+  // Extract first number to determine pace category
+  // Fast: 6:00-7:59 min/mile
+  // Moderate: 8:00-10:59 min/mile  
+  // Easy/Beginner: 11:00+ min/mile
+  
+  if (pace.includes('6:') || pace.includes('7:')) {
+    return {
+      category: 'FAST',
+      guidance: 'This is a FAST-paced workout for experienced runners. Be clear this is designed for runners training at high intensity. Use language like "challenging", "speed work", "tempo", or "push your limits". Do NOT say "all paces welcome" - this pace range is for advanced runners.'
+    };
+  } else if (pace.includes('11:') || pace.includes('12:') || pace.includes('beginner') || pace.includes('easy')) {
+    return {
+      category: 'EASY',
+      guidance: 'This is a beginner-friendly, easy-paced run. Emphasize it\'s welcoming to new runners, walkers, and those taking it easy. Use inclusive language like "all paces welcome", "no one left behind", or "perfect for beginners".'
+    };
+  } else {
+    return {
+      category: 'MODERATE',
+      guidance: 'This is a moderate-paced run suitable for regular runners. Strike a balance - welcoming but not necessarily for complete beginners. Mention it\'s great for consistent runners looking to maintain their fitness.'
+    };
+  }
+}
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -28,6 +55,9 @@ export default async function handler(req, res) {
   try {
     const eventData = req.body;
     const eventId = generateEventId();
+
+    // Get pace-aware guidance for AI prompt
+    const paceInfo = getPaceGuidance(eventData.paceRange);
 
     // Set up Google Sheets authentication
     const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
@@ -61,8 +91,11 @@ export default async function handler(req, res) {
       }
     });
 
-    // Call Claude API to generate invitation
+    // Call Claude API to generate invitation with pace-aware prompt
     const prompt = `You are a friendly, enthusiastic run club organizer writing an event invitation.
+
+IMPORTANT - PACE GUIDANCE:
+${paceInfo.guidance}
 
 Event Details:
 - Title: ${eventData.eventTitle}
@@ -83,7 +116,7 @@ Important guidelines:
 - Use generic terms like "runners" or "everyone" instead of "fam"
 - Keep it professional and welcoming
 - Avoid excessive or decorative emojis
-- All paces should be genuinely welcomed
+- Match the tone to the pace category (fast workout vs easy social run)
 
 Output format:
 SHORT: [your short version]
@@ -113,7 +146,7 @@ LONG: [your long version]`;
     const claudeData = await claudeResponse.json();
     const content = claudeData.content[0].text;
 
-    // Generate RSVP link
+    // Generate RSVP link with all event details in URL params
     const baseUrl = 'https://oducru-event-creator.vercel.app';
     const rsvpLink = `${baseUrl}/rsvp.html?event=${eventId}&title=${encodeURIComponent(eventData.eventTitle)}&date=${eventData.eventDate}&time=${eventData.eventTime}&location=${encodeURIComponent(eventData.location)}&pace=${encodeURIComponent(eventData.paceRange)}`;
 
@@ -121,7 +154,8 @@ LONG: [your long version]`;
     return res.status(200).json({
       eventId,
       content,
-      rsvpLink
+      rsvpLink,
+      paceCategory: paceInfo.category // Include for debugging if needed
     });
 
   } catch (error) {
